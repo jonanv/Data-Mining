@@ -78,10 +78,11 @@ def KNN():
 	#print(dataset)
 	#print(dataset.head())
 
-	# Se extrane las columnas del dataset
+	# Se extraen las columnas del dataset
 	dataset.columns
-	print(dataset.columns)
+	#print(dataset.columns)
 
+	print("Descripción del dataset: ")
 	print(dataset.describe()) # Descripción estadistica de los datos
 	columns = len(dataset.columns) # Número total de columnas
 	#print(columns)
@@ -148,6 +149,7 @@ def KNN():
 
 	# Revisar desde aca
 	"""
+	'''
 	# Selección de las caracteristcas
 	for x in range(len(lcaracteristicas)):
 		print(str(x+1) + ". " + lcaracteristicas[x])
