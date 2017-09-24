@@ -134,53 +134,6 @@ def KNN():
 	print("Lista de características: " + str(lcaracteristicas))
 	#print(lcaracteristicas)
 
-
-
-
-
-
-
-
-
-	
-	'''
-	# Selección de las caracteristicas que quiere graficar
-	for x in range(len(lcaracteristicas)):
-		print(str(x+1) + ". " + lcaracteristicas[x])
-	print("Seleccione dos caracteristicas para el gráfico de Cluster: ")
-
-	# Lista de las caracteristicas seleccionadas, media y desviacion estandar
-	mediaCluster = list()
-	destandarCluster = list()
-	Cluster = list()
-	for x in range(2):
-		nCluster = int(input("Característica " + str(x+1) + ": "))
-		mediaCluster.append(media[nCluster-1])
-		destandarCluster.append(destandar[nCluster-1])
-		Cluster.append(lcaracteristicas[nCluster-1]) # Se seleccionan las caracteristicas de la lista de acuerdo al numero ingresado
-	print("\nMedia: " + str(mediaCluster)) # Lista de la media de los Clusters
-	print("Desviación estandar: " + str(destandarCluster)) # Lista de la desviacion de los Clusters
-	print("Cluster: " + str(Cluster)) # Lista de los Clusters
-
-	# todas las filas y dos columnas
-	#matriz = dataset.loc[:, [Cluster[0], Cluster[1]]]
-	#print(matriz)
-
-	matriz = dataset.ix[:, [Cluster[0], Cluster[1]]].values
-	print("\nMatriz de Cluster:")
-	print(matriz)
-
-	# lista de valores del Cluster
-	matrizCluster = list()
-	MCrow = list()
-	for x in range(len(matriz)):
-		for y in range(len(Cluster)):
-			MCrow.append(matriz[x][y])
-		matrizCluster.append(MCrow)
-		MCrow = list()
-	#print(matrizCluster) # Matriz con los valores de los Clusters
-	'''
-
 	# Todas las filas y todas las columnas del dataset en una lista
 	matriz = dataset.loc[:,].values
 	print("\nMatriz:")
@@ -249,9 +202,10 @@ def KNN():
 	for x in range(2):
 		nCluster = int(input("Característica " + str(x+1) + ": "))
 		listaGrafica.append(nCluster-1) # Se seleccionan las caracteristicas de la lista de acuerdo al numero ingresado
-		etiquetasGrafica.append(lcaracteristicas[nCluster-1]) # Etiquetas de los ejes para la gráfica, las características seleccionadas
+		etiquetasGrafica.append(lcaracteristicas[nCluster-1]) # Etiquetas de los ejes de la gráfica, las características seleccionadas
 	print("Ejes de la gráfica: " + str(listaGrafica)) # Lista de ejes para la gráfica
-	print(etiquetasGrafica)
+	print("Etiquetas de la gráfica: " + str(etiquetasGrafica))
+
 	# Todas las filas y dos columnas para la gráfica
 	matrizGrafica = MN.ix[:, [listaGrafica[0], listaGrafica[1]]].values
 	print("\nMatriz de la gráfica:")
@@ -264,27 +218,10 @@ def KNN():
 	while (k > rows):
 		k = int(input("El valor de K es incorrecto, debe ser menor o igual a " + str(rows) + ": "))
 
-	
-	'''
-	# Ingresar un nuevo valor
-	valorNuevo = list()
-	for x in range(len(Cluster)):
-		valor = float(input("Ingrese nuevo valor de " + str(Cluster[x]) + ": "))
-		valorNuevo.append(valor)
-	print("\nValor nuevo: "+ str(valorNuevo))
-
-	# Valores nuevos normalizados
-	valorNormalizado = list()
-	for x in range(len(Cluster)):
-		valor = ((valorNuevo[x] - mediaCluster[x]) / destandarCluster[x])
-		valorNormalizado.append(valor)
-	print("Valor nuevo normalizado: " + str(valorNormalizado))
-	'''
-
 	# Valor seleccionado aleatoriamente para ser el Cluster
-	aletorio = random.randint(0, rows-1)
-	print(aletorio)
-	Cluster = matriz_distancia[aletorio]
+	aleatorio = random.randint(0, rows-1)
+	print("Valor seleccionado aleatoriamente: " + str(aleatorio))
+	Cluster = matriz_distancia[aleatorio]
 	print(Cluster)
 	
 	# Lista de distancias con respecto al Cluster seleccionado
@@ -358,7 +295,6 @@ def KNN():
 
 	# DataFrame con pandas de los ejes X y Y de la matriz normalizada
 	ejes = pd.DataFrame(np.array(matrizGrafica))
-	print(ejes)
 	ejeX = ejes.ix[:, 0]
 	ejeY = ejes.ix[:, 1]
 	
@@ -366,7 +302,6 @@ def KNN():
 	KNND = pd.DataFrame(np.array(knnDatos)) # Se convierte la lista de datos de vecinos más cercanos a DataFrame
 	matrizGrafica = KNND.ix[:, [listaGrafica[0], listaGrafica[1]]].values # Lista de los ejes que se escogieron de vecinos más cercanos
 	kEjes = pd.DataFrame(np.array(matrizGrafica))
-	print(kEjes)
 	kEjeX = kEjes.ix[:, 0]
 	kEjeY = kEjes.ix[:, 1]
 	
@@ -378,37 +313,12 @@ def KNN():
 	plt.plot(Cluster[listaGrafica[0]], Cluster[listaGrafica[1]], 'bo', marker='o', color='b', label="Valor nuevo") # Nuevo dato en azul
 	plt.plot(Cluster[listaGrafica[0]], Cluster[listaGrafica[1]], 'bo', marker='o', markersize=100*radio, linewidth=0.5, alpha=0.2) # Área del nuevo dato
 	plt.plot(kEjeX, kEjeY, 'go', marker='o', color='g', label="Vecinos cerca", alpha=0.5) # Datos de la matriz de vecinos más cercanos en verde
-	plt.xlabel(Cluster[0]) # Etiqueda en el eje X
-	plt.ylabel(Cluster[1]) # Etiqueta en el eje Y
+	plt.xlabel(etiquetasGrafica[0]) # Etiqueda en el eje X
+	plt.ylabel(etiquetasGrafica[1]) # Etiqueta en el eje Y
 	plt.grid(color='b', alpha=0.2, linestyle='dashed', linewidth=0.5) # Malla o grilla
 	plt.title('KNN, k = ' + str(k)) # Titulo de la gráfica
 	plt.legend(loc="lower right") # Legenda de la gráfica
 	plt.show()
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 def KMEANS():
 	print("Algoritmo de KMEANS")
@@ -527,7 +437,7 @@ def KMEANS():
 	lista_metrica = list()
 	matriz_distancia = list()
 	for n in range(rows):
-		individuo = vector_registro_matrizNormalizada(n, matrizNormalizada)
+		individuo = vector_registro_matrizNormalizada(n, matrizNormalizada, len(Cluster))
 		#print(individuo)
 		for v in range(rows):
 			for h in range(len(Cluster)):
@@ -546,6 +456,7 @@ def KMEANS():
 	MD = pd.DataFrame(np.array(matriz_distancia)) # Matriz de distacia con pandas
 	print(MD)
 	
+	'''
 	# Matriz de distancia euclidiana, triangular inferior
 	triangular_inferior = copy.deepcopy(matriz_distancia) # Copia de la lista
 	TIrow = list()
@@ -556,7 +467,8 @@ def KMEANS():
 	#print(triangular_inferior)
 	TI = pd.DataFrame(np.array(triangular_inferior)) # Matriz de distacia triangular inferior con pandas
 	print(TI)
-
+	'''
+	
 	# =========================================================================================================================
 	
 	# Número de cluster
