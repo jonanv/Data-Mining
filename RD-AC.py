@@ -479,7 +479,8 @@ def KMEANS():
 			valor = matrizNormalizada[nRandom]
 			ClustersCentroides.append(valor)
 	print("\nIndices de los Clusters: " + str(ClustersIndices)) # Indices de los Clusters
-	print("Centroides de los Clusters: " + str(ClustersCentroides)) # Clusters
+	print("Centroides de los Clusters: ") # Clusters
+	print(pd.DataFrame(np.array(ClustersCentroides)))
 
 	# Distancia de los Clusters
 	ClustersDistancias = list()
@@ -556,13 +557,117 @@ def KMEANS():
 
 
 
-	
+
+
+
+
+	# SEGUNDA ITERACIÓN
+	while (Clusters != ClustersNuevos):
+		
+		mediaClusterNuevo = list()
+		for x in range(nCluster):
+			ClusterNuevo = pd.DataFrame(np.array(ClustersDiccionario['Cluster'+str(x)]))
+			mcn = ClusterNuevo.mean().values.tolist() # Convertir la media del ClusterX a una lista
+			mediaClusterNuevo.append(mcn)
+		print("\nLista de medias de los Cluster nuevos: ")
+		print(pd.DataFrame(np.array(mediaClusterNuevo)))
+
+		# Distancia de nuevos centroides
+		individuo_tabla = list()
+		lista_metrica = list()
+		matriz_distancia_cluster = list()
+		for n in range(nCluster):
+			
+			for v in range(rows):
+				for h in range(columns):
+					valor = matrizNormalizada[v][h]
+					individuo_tabla.append(valor)
+				#print(individuo_tabla)
+				metrica = dist_euclidiana(mediaClusterNuevo[n], individuo_tabla)
+				#print(metrica)
+				lista_metrica.append(metrica)
+				individuo_tabla = list()
+			#print(lista_metrica)
+			matriz_distancia_cluster.append(lista_metrica)
+			lista_metrica = list()
+		print("\nMatriz de distancia euclidiana de los Cluster nuevos:")
+		#print(matriz_distancia_cluster)
+		MDC = pd.DataFrame(np.array(matriz_distancia_cluster)) # Matriz de distacia con pandas
+		print(MDC)
+		
+		# Lista de mínimos nuevos
+		ClustersMinNuevos = MDC.min().values.tolist() # Convertir los mínimos de ClustersMinNuevos a una lista
+		print("\nLista de mínimos nuevos: " + str(ClustersMinNuevos))
+		#print(ClustersMin)
+
+		# Lista de Clusters nuevos
+		ClustersNuevos = list()
+		listaMinNuevos = list()
+		for x in range(len(matriz_distancia)):
+			for y in range(nCluster):
+				listaMinNuevos.append(matriz_distancia_cluster[y][x])
+			ClustersNuevos.append(minimo(listaMinNuevos))
+			listaMinNuevos = list()
+		print("\nLista de Clusters pasada: " + str(Clusters))
+		print("\nLista de Clusters nuevos: " + str(ClustersNuevos))
+		
+		# Lista de indices de los Clusters nuevos
+		indices = list()
+		for x in range(len(ClustersNuevos)):
+			indices.append(x)
+
+		# Diccionario de indices: Clusters nuevos
+		ClustersDiccionarioNuevo = dict(zip(indices, ClustersNuevos))
+		cdn = sorted(ClustersDiccionarioNuevo.items(), key=operator.itemgetter(1)) # Ordena el diccionario en tuplas por el valor
+		print("\nDiccionario valor:ClusterNuevo ordenado por Cluster:")
+		print(cdn) # Imprime el diccionario en tuplas ordenado por valor
+
+		# Llaves y valores en listas
+		llaves = list()
+		valores = list()
+		for x in range(len(ClustersDiccionarioNuevo)):
+			llaves.append(cdn[x][0])
+			valores.append(cdn[x][1])
+		#print(llaves)
+		#print(valores)
+
+		# Diccionario con las claves pero sin valores Clusters:Valores
+		ClustersDiccionarioNuevo = {}
+		for x in range(nCluster):
+			ClustersDiccionarioNuevo.setdefault('Cluster'+str(x),)
+		#print(ClustersDiccionarioNuevo) # Diccionario vacio
+
+		# Diccionario con los Clusters completos
+		listaClustersNuevo = list()
+		for x in range(nCluster):
+			for y in range(len(Clusters)):
+				if valores[y] == x:
+					listaClustersNuevo.append(matrizNormalizada[llaves[y]])
+			ClustersDiccionarioNuevo['Cluster'+str(x)] = listaClustersNuevo
+			listaClustersNuevo = list()
+		#print(ClustersDiccionarioNuevo)
+		
+		# Diccionario de cada Cluster
+		for x in range(nCluster):
+			print("\nCluster " + str(x) + ": " + str(ClustersDiccionarioNuevo['Cluster'+str(x)]))
+
+
+
+
+
+
+
+
+
+
+
+
+
+	"""
 	# DataFrame con pandas de los ejes X y Y de los centroides de los Clusters seleccionados
 	ejesCentroides = pd.DataFrame(np.array(ClustersCentroides))
 	ejeXCentroides = ejesCentroides.ix[:, listaGrafica[0]]
 	ejeYCentroides = ejesCentroides.ix[:, listaGrafica[1]]
-
-
 
 	# DataFrame con pandas de los ejes X y Y de Clusters X
 	colors = "grcmykwb" # Lista de colores de los Cluster
@@ -590,7 +695,7 @@ def KMEANS():
 	plt.legend(loc="lower right") # Legenda de la gráfica
 	plt.show()
 	
-	
+	"""
 
 
 
