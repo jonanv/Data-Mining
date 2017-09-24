@@ -26,18 +26,19 @@ def loadDataset():
 		header = 0
 	else:
 		header = None
-		print("El archivo de de tener encabezado para determinar las caracteristicas y las clases")
+		print("El archivo debe de tener encabezado para determinar las caracteristicas y las clases")
 		exit()
 	dataset = pd.read_csv(filename, header=header)
 	return dataset
 
-def vector_registro_matrizNormalizada(n, matrizNormalizada):
+def vector_registro_matrizNormalizada(n, matrizNormalizada, columns):
 	registro_matrizNormalizada = list()
-	for i in range(2):
+	for i in range(columns):
 		valor = matrizNormalizada[n][i]
 		registro_matrizNormalizada.append(valor)
 	return registro_matrizNormalizada
 
+# Función de la distancia euclidiana
 def dist_euclidiana(v1, v2):
 	dimension = len(v1)
 	suma = 0
@@ -130,7 +131,7 @@ def KNN():
 	lcaracteristicas = list()
 	for x in range(len(cnum)):
 		lcaracteristicas.append(columnas[x])
-	print("Lista de características: " + str(lcaracteristicas) + "\n")
+	print("Lista de características: " + str(lcaracteristicas))
 	#print(lcaracteristicas)
 
 
@@ -141,19 +142,12 @@ def KNN():
 
 
 
-
-
-
-
-
-
-	# Revisar desde aca
-	"""
+	
 	'''
-	# Selección de las caracteristcas
+	# Selección de las caracteristicas que quiere graficar
 	for x in range(len(lcaracteristicas)):
 		print(str(x+1) + ". " + lcaracteristicas[x])
-	print("Seleccione dos caracteristicas para el Cluster: ")
+	print("Seleccione dos caracteristicas para el gráfico de Cluster: ")
 
 	# Lista de las caracteristicas seleccionadas, media y desviacion estandar
 	mediaCluster = list()
@@ -185,30 +179,36 @@ def KNN():
 		matrizCluster.append(MCrow)
 		MCrow = list()
 	#print(matrizCluster) # Matriz con los valores de los Clusters
+	'''
 
-	# Matriz normalizada de los Clusters
+	# Todas las filas y todas las columnas del dataset en una lista
+	matriz = dataset.loc[:,].values
+	print("\nMatriz:")
+	print(matriz)
+
+	# Matriz normalizada
 	matrizNormalizada = list()
 	MNrow = list()
-	for x in range(len(matriz)):
-		for y in range(len(Cluster)):
-			result = ((matrizCluster[x][y] - mediaCluster[y]) / destandarCluster[y])
+	for x in range(rows):
+		for y in range(columns):
+			result = ((matriz[x][y] - media[y]) / destandar[y])
 			MNrow.append(result)
 		matrizNormalizada.append(MNrow)
 		MNrow = list()
-	print("\nMatriz normalizada de Cluster:")
+	print("\nMatriz normalizada:")
 	#print(matrizNormalizada) # Matriz con los valores normalizados de los Clusters
 	MN = pd.DataFrame(np.array(matrizNormalizada)) # Matriz normalizada con pandas
 	print(MN)
-	
+
 	# Matriz de distancia euclidiana
 	individuo_tabla = list()
 	lista_metrica = list()
 	matriz_distancia = list()
 	for n in range(rows):
-		individuo = vector_registro_matrizNormalizada(n, matrizNormalizada)
+		individuo = vector_registro_matrizNormalizada(n, matrizNormalizada, columns)
 		#print(individuo)
 		for v in range(rows):
-			for h in range(len(Cluster)):
+			for h in range(columns):
 				valor = matrizNormalizada[v][h]
 				individuo_tabla.append(valor)
 			#print(individuo_tabla)
@@ -223,7 +223,8 @@ def KNN():
 	#print(matriz_distancia)
 	MD = pd.DataFrame(np.array(matriz_distancia)) # Matriz de distacia con pandas
 	print(MD)
-	
+
+	'''
 	# Matriz de distancia euclidiana, triangular inferior
 	triangular_inferior = copy.deepcopy(matriz_distancia) # Copia de la lista
 	TIrow = list()
@@ -234,13 +235,37 @@ def KNN():
 	#print(triangular_inferior)
 	TI = pd.DataFrame(np.array(triangular_inferior)) # Matriz de distacia triangular inferior con pandas
 	print(TI)
-	
+	'''
+
+	# Selección de las características para el gráfico
+	print()
+	for x in range(len(lcaracteristicas)):
+		print(str(x+1) + ". " + lcaracteristicas[x])
+	print("Seleccione dos características para el gráfico de Cluster: ")
+
+	# Lista de las caracteristicas seleccionadas
+	listaGrafica = list()
+	etiquetasGrafica = list()
+	for x in range(2):
+		nCluster = int(input("Característica " + str(x+1) + ": "))
+		listaGrafica.append(nCluster-1) # Se seleccionan las caracteristicas de la lista de acuerdo al numero ingresado
+		etiquetasGrafica.append(lcaracteristicas[nCluster-1]) # Etiquetas de los ejes para la gráfica, las características seleccionadas
+	print("Ejes de la gráfica: " + str(listaGrafica)) # Lista de ejes para la gráfica
+	print(etiquetasGrafica)
+	# Todas las filas y dos columnas para la gráfica
+	matrizGrafica = MN.ix[:, [listaGrafica[0], listaGrafica[1]]].values
+	print("\nMatriz de la gráfica:")
+	print(matrizGrafica)
+
 	# =============================================================================================================================
+
 	# Número de vecinos cercanos
 	k = int(input("\nIngrese el número de K o vecinos cercanos: "))
 	while (k > rows):
 		k = int(input("El valor de K es incorrecto, debe ser menor o igual a " + str(rows) + ": "))
 
+	
+	'''
 	# Ingresar un nuevo valor
 	valorNuevo = list()
 	for x in range(len(Cluster)):
@@ -254,18 +279,25 @@ def KNN():
 		valor = ((valorNuevo[x] - mediaCluster[x]) / destandarCluster[x])
 		valorNormalizado.append(valor)
 	print("Valor nuevo normalizado: " + str(valorNormalizado))
+	'''
+
+	# Valor seleccionado aleatoriamente para ser el Cluster
+	aletorio = random.randint(0, rows-1)
+	print(aletorio)
+	Cluster = matriz_distancia[aletorio]
+	print(Cluster)
 	
-	# Lista de distancias con respecto al punto nuevo
+	# Lista de distancias con respecto al Cluster seleccionado
 	valorDistancias = list()
-	individuo_tabla_normalizada = list()
-	for x in range(len(matrizNormalizada)):
-		for y in range(2):
-			valor = matrizNormalizada[x][y]
-			individuo_tabla_normalizada.append(valor)
-		distancia = dist_euclidiana(valorNormalizado, individuo_tabla_normalizada)
+	individuo_tabla_distancia = list()
+	for x in range(len(matriz_distancia)):
+		for y in range(len(Cluster)):
+			valor = matriz_distancia[x][y]
+			individuo_tabla_distancia.append(valor)
+		distancia = dist_euclidiana(Cluster, individuo_tabla_distancia)
 		valorDistancias.append(distancia)
-		individuo_tabla_normalizada = list()
-	print("\nDistancias al punto nuevo:")
+		individuo_tabla_distancia = list()
+	print("\nDistancias al punto del Cluster:")
 	print(valorDistancias)
 
 	# Lista de indices
@@ -325,21 +357,26 @@ def KNN():
 	'''
 
 	# DataFrame con pandas de los ejes X y Y de la matriz normalizada
-	ejes = pd.DataFrame(np.array(matrizNormalizada))
+	ejes = pd.DataFrame(np.array(matrizGrafica))
+	print(ejes)
 	ejeX = ejes.ix[:, 0]
 	ejeY = ejes.ix[:, 1]
+	
 	# DataFrame con pandas de los ejes X y Y de la matriz de vecinos más cercanos
-	kEjes = pd.DataFrame(np.array(knnDatos))
+	KNND = pd.DataFrame(np.array(knnDatos)) # Se convierte la lista de datos de vecinos más cercanos a DataFrame
+	matrizGrafica = KNND.ix[:, [listaGrafica[0], listaGrafica[1]]].values # Lista de los ejes que se escogieron de vecinos más cercanos
+	kEjes = pd.DataFrame(np.array(matrizGrafica))
+	print(kEjes)
 	kEjeX = kEjes.ix[:, 0]
 	kEjeY = kEjes.ix[:, 1]
-
+	
 	# Radio tomado de la mayor distancia de los vecinos más cercanos
 	radio = knnDistancia[k-1][1]
 
 	# Grafica de los datos normalizados
 	plt.plot(ejeX, ejeY, 'ro', marker='o', color='r', label="Valores", alpha=0.5) # Datos de la matriz normalizada en rojo
-	plt.plot(valorNormalizado[0], valorNormalizado[1], 'bo', marker='o', color='b', label="Valor nuevo") # Nuevo dato en azul
-	plt.plot(valorNormalizado[0], valorNormalizado[1], 'bo', marker='o', markersize=100*radio, linewidth=0.5, alpha=0.2) # Área del nuevo dato
+	plt.plot(Cluster[listaGrafica[0]], Cluster[listaGrafica[1]], 'bo', marker='o', color='b', label="Valor nuevo") # Nuevo dato en azul
+	plt.plot(Cluster[listaGrafica[0]], Cluster[listaGrafica[1]], 'bo', marker='o', markersize=100*radio, linewidth=0.5, alpha=0.2) # Área del nuevo dato
 	plt.plot(kEjeX, kEjeY, 'go', marker='o', color='g', label="Vecinos cerca", alpha=0.5) # Datos de la matriz de vecinos más cercanos en verde
 	plt.xlabel(Cluster[0]) # Etiqueda en el eje X
 	plt.ylabel(Cluster[1]) # Etiqueta en el eje Y
@@ -347,7 +384,7 @@ def KNN():
 	plt.title('KNN, k = ' + str(k)) # Titulo de la gráfica
 	plt.legend(loc="lower right") # Legenda de la gráfica
 	plt.show()
-	"""
+	
 
 
 
