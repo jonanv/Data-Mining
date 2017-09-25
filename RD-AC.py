@@ -64,6 +64,102 @@ def minimo(lista):
 def ACP():
 	print("Algoritmo de ACP")
 
+	# Cargar el archivo dataset
+	dataset = loadDataset()
+	#print(dataset)
+	#print(dataset.head())
+
+	# Se extraen las columnas del dataset
+	dataset.columns
+	#print(dataset.columns)
+
+	print("Descripción del dataset: ")
+	print(dataset.describe()) # Descripción estadistica de los datos
+	columns = len(dataset.columns) # Número total de columnas
+	#print(columns)
+	rows = len(dataset.index) # Número total de filas
+	#print(rows)
+
+	# Agrupando columnas por tipo de datos
+	tipos = dataset.columns.to_series().groupby(dataset.dtypes).groups
+
+	# Armando lista de columnas categóricas
+	try:
+		ctext = tipos[np.dtype('object')]
+	except KeyError:
+		ctext = list() # lista de columnas vacia en caso de que no haya categóricas
+	print("\nNúmero de columnas categoricas: " + str(len(ctext))) # cantidad de columnas con datos categóricos
+
+	# Armando lista de columnas numéricas
+	columnas = dataset.columns  # lista total las columnas
+	cnum = list(set(columnas) - set(ctext)) # Total de columnas menos columnas no numéricas
+	print("Número de columnas numericas: " + str(len(cnum)))
+
+	# Lista de medias
+	#print(dataset.mean())
+	'''media = list()
+	for x in range(len(dataset.mean())):
+		media.append(dataset.mean()[x])
+	print(media)'''
+
+	media = dataset.mean().values.tolist() # Convertir la media del dataset a una lista
+	print("\nLista de medias: " + str(media))
+	#print(media)
+
+	# Lista de desviación estandar
+	#print(dataset.std())
+	'''destandar = list()
+	for x in range(len(dataset.std())):
+		destandar.append(dataset.std()[x])
+	print(destandar)'''
+
+	destandar = dataset.std().values.tolist() # Convertir la desviación estandar del dataset a una lista
+	print("Lista de desviación estandar: " + str(destandar))
+	#print(destandar)
+
+	# Lista de caracteristicas
+	lcaracteristicas = list()
+	for x in range(len(cnum)):
+		lcaracteristicas.append(columnas[x])
+	print("Lista de características: " + str(lcaracteristicas))
+	#print(lcaracteristicas)
+
+	# Todas las filas y todas las columnas del dataset en una lista
+	matriz = dataset.loc[:,].values
+	print("\nMatriz:")
+	print(matriz)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	
 
 
 def ACPK():
