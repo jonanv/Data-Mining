@@ -562,15 +562,18 @@ def KMEANS():
 
 
 	# SEGUNDA ITERACIÓN
-	while (Clusters != ClustersNuevos):
-		
-		mediaClusterNuevo = list()
+	iteraciones = 1
+	respuesta = False
+	while (respuesta == False):
+
+		# Nuevos centroides del Cluster calculados por la media
+		mediaClustersNuevosCentroides = list()
 		for x in range(nCluster):
 			ClusterNuevo = pd.DataFrame(np.array(ClustersDiccionario['Cluster'+str(x)]))
 			mcn = ClusterNuevo.mean().values.tolist() # Convertir la media del ClusterX a una lista
-			mediaClusterNuevo.append(mcn)
+			mediaClustersNuevosCentroides.append(mcn)
 		print("\nLista de medias de los Cluster nuevos: ")
-		print(pd.DataFrame(np.array(mediaClusterNuevo)))
+		print(pd.DataFrame(np.array(mediaClustersNuevosCentroides)))
 
 		# Distancia de nuevos centroides
 		individuo_tabla = list()
@@ -583,7 +586,7 @@ def KMEANS():
 					valor = matrizNormalizada[v][h]
 					individuo_tabla.append(valor)
 				#print(individuo_tabla)
-				metrica = dist_euclidiana(mediaClusterNuevo[n], individuo_tabla)
+				metrica = dist_euclidiana(mediaClustersNuevosCentroides[n], individuo_tabla)
 				#print(metrica)
 				lista_metrica.append(metrica)
 				individuo_tabla = list()
@@ -610,6 +613,13 @@ def KMEANS():
 			listaMinNuevos = list()
 		print("\nLista de Clusters pasada: " + str(Clusters))
 		print("\nLista de Clusters nuevos: " + str(ClustersNuevos))
+
+		# Condición que compara la lista inicial de los Clusters con la lista nueva de los Clusters
+		if (Clusters == ClustersNuevos):
+			respuesta = True
+		else:
+			respuesta = False
+		#print(respuesta)
 		
 		# Lista de indices de los Clusters nuevos
 		indices = list()
@@ -651,6 +661,10 @@ def KMEANS():
 		for x in range(nCluster):
 			print("\nCluster " + str(x) + ": " + str(ClustersDiccionarioNuevo['Cluster'+str(x)]))
 
+		iteraciones += 1
+		Clusters = copy.deepcopy(ClustersNuevos)
+
+	print("\nNúmero de iteraciones: " + str(iteraciones))
 
 
 
@@ -659,20 +673,16 @@ def KMEANS():
 
 
 
-
-
-
-
-	"""
+	
 	# DataFrame con pandas de los ejes X y Y de los centroides de los Clusters seleccionados
-	ejesCentroides = pd.DataFrame(np.array(ClustersCentroides))
+	ejesCentroides = pd.DataFrame(np.array(mediaClustersNuevosCentroides))
 	ejeXCentroides = ejesCentroides.ix[:, listaGrafica[0]]
 	ejeYCentroides = ejesCentroides.ix[:, listaGrafica[1]]
 
 	# DataFrame con pandas de los ejes X y Y de Clusters X
 	colors = "grcmykwb" # Lista de colores de los Cluster
 	for x in range(nCluster):
-		ejesCluster = pd.DataFrame(np.array(ClustersDiccionario['Cluster'+str(x)]))
+		ejesCluster = pd.DataFrame(np.array(ClustersDiccionarioNuevo['Cluster'+str(x)]))
 		print("\nCluster " + str(x) + ":")
 		print(ejesCluster)
 		ejeXCluster = ejesCluster.ix[:, listaGrafica[0]]
@@ -683,19 +693,19 @@ def KMEANS():
 		plt.plot(ejeXCluster, ejeYCluster, color+str('o'), marker='o', color=color, label='Cluster'+str(x), alpha=0.5) # Datos del Cluster 0
 	
 	# Grafica de los datos normalizados
-	plt.plot(ejeXCentroides, ejeYCentroides, 'bo', marker='o', color='b', label="Centroides", alpha=0.05) # Datos de los centroides en rojo
+	plt.plot(ejeXCentroides, ejeYCentroides, 'bo', marker='o', color='b', label="Centroides", alpha=0.3) # Datos de los centroides en rojo
 	# Área de cada centroide X
 	for x in range(nCluster):
-		plt.plot(ejeXCentroides[x], ejeYCentroides[x], 'bo', marker='o', markersize=100, linewidth=0.5, alpha=0.2) # Área de los centroides X
+		plt.plot(ejeXCentroides[x], ejeYCentroides[x], 'bo', marker='o', markersize=100, linewidth=0.5, alpha=0.1) # Área de los centroides X
 
 	plt.xlabel(etiquetasGrafica[0]) # Etiqueda en el eje X
 	plt.ylabel(etiquetasGrafica[1]) # Etiqueta en el eje Y
 	plt.grid(color='b', alpha=0.2, linestyle='dashed', linewidth=0.5) # Malla o grilla
-	plt.title('KMEANS, N Clusters = ' + str(nCluster)) # Titulo de la gráfica
+	plt.title('KMEANS, N Clusters = ' + str(nCluster) + ', Iteraciones = ' + str(iteraciones)) # Titulo de la gráfica
 	plt.legend(loc="lower right") # Legenda de la gráfica
 	plt.show()
 	
-	"""
+	
 
 
 
