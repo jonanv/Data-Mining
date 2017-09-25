@@ -551,16 +551,9 @@ def KMEANS():
 		print("\nCluster " + str(x) + ": " + str(ClustersDiccionario['Cluster'+str(x)]))
 
 
-
-
-
-
-
-
-
-
-
-
+	# ============================================================================================================================
+	
+	
 	# SEGUNDA ITERACIÓN
 	iteraciones = 1
 	respuesta = False
@@ -664,16 +657,9 @@ def KMEANS():
 		iteraciones += 1
 		Clusters = copy.deepcopy(ClustersNuevos)
 
+	# Número de iteraciones despues de la segunda iteración
 	print("\nNúmero de iteraciones: " + str(iteraciones))
 
-
-
-
-
-
-
-
-	
 	# DataFrame con pandas de los ejes X y Y de los centroides de los Clusters seleccionados
 	ejesCentroides = pd.DataFrame(np.array(mediaClustersNuevosCentroides))
 	ejeXCentroides = ejesCentroides.ix[:, listaGrafica[0]]
@@ -705,15 +691,6 @@ def KMEANS():
 	plt.legend(loc="lower right") # Legenda de la gráfica
 	plt.show()
 	
-	
-
-
-
-
-
-
-
-
 def EM():
 	print("Algoritmo de EM")
 
