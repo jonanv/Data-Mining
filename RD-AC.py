@@ -145,10 +145,13 @@ def ACP():
 	MDA = pd.DataFrame(np.array(matrizDatosAjustados)) # Matriz de datos ajustados con pandas
 	print(MDA)
 
-	
-
-
-
+	# Transpuesta de la matriz de datos ajustados
+	Transpuesta = np.array(matrizDatosAjustados) # Convertir la lista a formato numpy
+	matrizDatosAjustadosT = Transpuesta.transpose().tolist() # Convertir la lista numpy con la transpuesta a formato normal de lista
+	print("\nMatriz de datos ajustados transpuesta:")
+	#print(matrizDatosAjustadosT)
+	MDAT = pd.DataFrame(np.array(matrizDatosAjustadosT)) # Matriz de datos ajustados con pandas
+	print(MDAT)
 
 
 
