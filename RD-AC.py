@@ -129,8 +129,23 @@ def ACP():
 	print("\nMatriz:")
 	print(matriz)
 
+	# ===========================================================================================================================
 
+	# Datos ajustados de la matriz
+	matrizDatosAjustados = list()
+	MDArow = list()
+	for x in range(rows):
+		for y in range(columns):
+			result = (matriz[x][y] - media[y])
+			MDArow.append(result)
+		matrizDatosAjustados.append(MDArow)
+		MDArow = list()
+	print("\nMatriz de datos ajustados:")
+	#print(matrizDatosAjustados)
+	MDA = pd.DataFrame(np.array(matrizDatosAjustados)) # Matriz de datos ajustados con pandas
+	print(MDA)
 
+	
 
 
 
