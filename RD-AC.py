@@ -35,6 +35,7 @@ def loadDataset():
 	dataset = pd.read_csv(filename, header=header)
 	return dataset
 
+# Función que recibe que n individuo de la matriz normalizada va a devolver
 def vector_registro_matrizNormalizada(n, matrizNormalizada, columns):
 	registro_matrizNormalizada = list()
 	for i in range(columns):
