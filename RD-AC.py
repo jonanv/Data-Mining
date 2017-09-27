@@ -19,6 +19,7 @@ from sklearn.datasets import make_circles
 #filename = 'dataset/prueba.data'
 filename = 'dataset/kmeans.data'
 #filename = 'dataset/pca.data'
+#filename = 'dataset/kpca.data'
 
 # Función que carga el archivo y pregunta si tiene encabezado
 def loadDataset():
