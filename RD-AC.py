@@ -15,11 +15,12 @@ from sklearn.datasets import make_circles
 # Archivo dataset que se va a cargar
 #filename = 'dataset/dataset.csv'
 #filename = 'dataset/dataset_muestra.csv'
+#filename = 'dataset/Dataset_Educativo_Completo.csv'
 #filename = 'dataset/iris.data'
 #filename = 'dataset/prueba.data'
-filename = 'dataset/kmeans.data'
+#filename = 'dataset/kmeans.data'
 #filename = 'dataset/pca.data'
-#filename = 'dataset/kpca.data'
+filename = 'dataset/kpca.data'
 
 # Función que carga el archivo y pregunta si tiene encabezado
 def loadDataset():
