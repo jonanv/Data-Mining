@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import math, operator, random, copy
+from numpy import linalg as la
 '''
 from sklearn.preprocessing import StandardScaler
 
@@ -17,6 +18,7 @@ from sklearn.datasets import make_circles
 #filename = 'dataset/iris.data'
 #filename = 'dataset/prueba.data'
 filename = 'dataset/kmeans.data'
+#filename = 'dataset/pca.data'
 
 # Función que carga el archivo y pregunta si tiene encabezado
 def loadDataset():
@@ -161,7 +163,8 @@ def ACP():
 		for j in range(columns): # Columnas de la matriz 2
 			for k in range(rows): # Filas de la matriz 2
 				suma += (matrizDatosAjustadosT[i][k] * matrizDatosAjustados[k][j])
-			MCrow.append(suma)
+			covarianza = (suma / (rows-1)) # Cada valor de la matriz de covarianza se debe dividir por n-1 (filas-1)
+			MCrow.append(covarianza)
 			suma = 0
 		matrizCovarianza.append(MCrow)
 		MCrow = list()
@@ -170,9 +173,57 @@ def ACP():
 	MC = pd.DataFrame(np.array(matrizCovarianza)) # Matriz de covarianza con pandas
 	print(MC)
 
-	# Valores propios
-	
+	# Valores propios y vectores propios
+	evalues, evectors = la.eig(np.array(matrizCovarianza))
+	print("\nValores propios:")
+	eigenvalues = evalues.tolist()
+	print(eigenvalues)
+	print("\nVectores propios:")
+	print(evectors)
+	eigenvectors = evectors.tolist()
+	#print(eigenvectors)
 
+	# Suma de los valores propios
+	sumaEigenvalues = 0
+	for x in range(len(eigenvalues)):
+		sumaEigenvalues += eigenvalues[x]
+	print("\nSuma de los valores propios: " + str(sumaEigenvalues))
+
+	# Importancia de las columnas en pocentajes
+	porcentaje = list()
+	for x in range(len(eigenvalues)):
+		result = (eigenvalues[x] / sumaEigenvalues) * 100
+		porcentaje.append(result)
+	print("\nImportancia de las columnas en porcentaje: " + str(porcentaje))
+
+	# Indices de los porcentajes
+	indicesPorcentajes = list()
+	for x in range(len(porcentaje)):
+		indicesPorcentajes.append(x)
+
+	# Diccionario de indices: porcentajes
+	diccionarioPorcentaje = dict(zip(indicesPorcentajes, porcentaje))
+	dp = sorted(diccionarioPorcentaje.items(), key=operator.itemgetter(1)) # Ordena el diccionario en tuplas por el valor (0 = clave, 1 = valor)
+	print("\nDiccionario columna:porcentaje ordenado por porcentaje (descendente):")
+	dp.reverse() # ordena descendente con .reverse()
+	print(dp) # Imprime el diccionario en tuplas ordenado por valor
+
+	# Nuevo conjunto de datos (Datos ajustados con la media X Matriz de valores propios)
+	nuevoConjuntoDatos = list()
+	NCDrow = list()
+	suma = 0
+	for i in range(len(matrizDatosAjustados)): # Filas de la matriz 1
+		for j in range(len(eigenvectors)): # Columnas de la matriz 2
+			for k in range(len(eigenvectors)): # Filas de la matriz 2
+				suma += (matrizDatosAjustados[i][k] * eigenvectors[k][j])
+			NCDrow.append(suma)
+			suma = 0
+		nuevoConjuntoDatos.append(NCDrow)
+		NCDrow = list()
+	print("\nMatriz de nuevo conjunto de datos:")
+	#print(nuevoConjuntoDatos)
+	NCD = pd.DataFrame(np.array(nuevoConjuntoDatos)) # Matriz de nuevo conjunto de datos con pandas
+	print(NCD)
 
 
 
@@ -369,7 +420,7 @@ def KNN():
 
 	# Diccionario de indices: valorDistancias
 	diccionario = dict(zip(indices, valorDistancias))
-	d = sorted(diccionario.items(), key=operator.itemgetter(1)) # Ordena el diccionario en tuplas por el valor
+	d = sorted(diccionario.items(), key=operator.itemgetter(1)) # Ordena el diccionario en tuplas por el valor (0 = clave, 1 = valor)
 	print("\nDiccionario vecino:ditancia ordenado por distancia:")
 	print(d) # Imprime el diccionario en tuplas ordenado por valor
 
@@ -642,7 +693,7 @@ def KMEANS():
 
 	# Diccionario de indices: Clusters
 	ClustersDiccionario = dict(zip(indices, Clusters))
-	cd = sorted(ClustersDiccionario.items(), key=operator.itemgetter(1)) # Ordena el diccionario en tuplas por el valor
+	cd = sorted(ClustersDiccionario.items(), key=operator.itemgetter(1)) # Ordena el diccionario en tuplas por el valor (0 = clave, 1 = valor)
 	print("\nDiccionario valor:Cluster ordenado por Cluster:")
 	print(cd) # Imprime el diccionario en tuplas ordenado por valor
 
@@ -746,7 +797,7 @@ def KMEANS():
 
 		# Diccionario de indices: Clusters nuevos
 		ClustersDiccionarioNuevo = dict(zip(indices, ClustersNuevos))
-		cdn = sorted(ClustersDiccionarioNuevo.items(), key=operator.itemgetter(1)) # Ordena el diccionario en tuplas por el valor
+		cdn = sorted(ClustersDiccionarioNuevo.items(), key=operator.itemgetter(1)) # Ordena el diccionario en tuplas por el valor (0 = clave, 1 = valor)
 		print("\nDiccionario valor:ClusterNuevo ordenado por Cluster:")
 		print(cdn) # Imprime el diccionario en tuplas ordenado por valor
 
