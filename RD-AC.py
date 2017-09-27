@@ -153,14 +153,25 @@ def ACP():
 	MDAT = pd.DataFrame(np.array(matrizDatosAjustadosT)) # Matriz de datos ajustados con pandas
 	print(MDAT)
 
+	# Matriz de covarianza (Transpuesta X Datos-Ajustados)
+	matrizCovarianza = list()
+	MCrow = list()
+	suma = 0
+	for i in range(len(matrizDatosAjustadosT)): # Filas de la matriz 1
+		for j in range(columns): # Columnas de la matriz 2
+			for k in range(rows): # Filas de la matriz 2
+				suma += (matrizDatosAjustadosT[i][k] * matrizDatosAjustados[k][j])
+			MCrow.append(suma)
+			suma = 0
+		matrizCovarianza.append(MCrow)
+		MCrow = list()
+	print("\nMatriz de covarianza:")
+	#print(matrizCovarianza)
+	MC = pd.DataFrame(np.array(matrizCovarianza)) # Matriz de covarianza con pandas
+	print(MC)
 
-
-
-
-
-
-
-
+	# Valores propios
+	
 
 
 
