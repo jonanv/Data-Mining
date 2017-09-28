@@ -1,8 +1,9 @@
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
-import math, operator, random, copy
+import math, operator, random, copy, os
 from numpy import linalg as la
+import easygui as eg
 '''
 from sklearn.preprocessing import StandardScaler
 
@@ -19,8 +20,18 @@ from sklearn.datasets import make_circles
 #filename = 'dataset/iris.data'
 #filename = 'dataset/prueba.data'
 #filename = 'dataset/kmeans.data'
-filename = 'dataset/pca.data'
+#filename = 'dataset/pca.data'
 #filename = 'dataset/kpca.data'
+
+# Función que selecciona el archivo
+def seleccionar():
+	extension = ["*.csv","*.data"]
+	archivo = eg.fileopenbox(msg="Abrir archivo",
+							title="Control: fileopenbox",
+							default='',
+							filetypes=extension)                   
+	eg.msgbox(archivo, "fileopenbox", ok_button="Continuar")
+	return archivo
 
 # Función que carga el archivo y pregunta si tiene encabezado
 def loadDataset():
@@ -32,7 +43,7 @@ def loadDataset():
 		header = None
 		print("El archivo debe de tener encabezado para determinar las caracteristicas y las clases")
 		exit()
-	dataset = pd.read_csv(filename, header=header)
+	dataset = pd.read_csv(seleccionar(), header=header)
 	return dataset
 
 # Función que recibe que n individuo de la matriz normalizada va a devolver
@@ -229,9 +240,10 @@ def ACP():
 	print(NCD)
 
 	# Guardar componentes en un archivo csv
-	print("\nSe ha generado un archivo .csv con los componentes")
 	NCD.columns = lcaracteristicas
-	NCD.to_csv('dataset/pca_componentes.csv', header=True, sep=',', index=False)
+	name = str(input("\nIngrese el nombre de su archivo .csv: "))
+	NCD.to_csv('dataset/' + str(name) + '.csv', header=True, sep=',', index=False)
+	print("\nSe ha generado un archivo " + str(name) + ".csv con los componentes")
 
 def ACPK():
 	print("Algoritmo de ACPK")
@@ -891,38 +903,41 @@ def EM():
 
 
 def menu():
-	print("========================================================================") 
-	print("PROGRAMA DE INPLEMENTACIÓN DE ALGORITMOS DE REDUCCIÓN DE DIMENSIONALIDAD") 
-	print("E IMPLEMENTACIÓN DE ALGORITMOS DE ClUSTERING")
-	print("========================================================================\n")
-	print("SELECCIONE UN ALGOTIRMO:")
-	print("------------------------------------------------------------------------")
-	print("* Análisis de componentes principales (ACP) ....................1")
-	print("* Análisis de componentes principales por kernel (ACPK) ........2")
-	print("* KNN (K-Vecinos más Cercanos) .................................3")
-	print("* KMEANS (Método de agrupamiento) ..............................4")
-	print("* EM (Clúster probabilístico) ..................................5")
-	print("* SALIR ........................................................0")
-	print("------------------------------------------------------------------------")
-	opcion = input("Opción: ")
+	bucle = True
+	while (bucle == True):
+		print("\n========================================================================") 
+		print("PROGRAMA DE INPLEMENTACIÓN DE ALGORITMOS DE REDUCCIÓN DE DIMENSIONALIDAD") 
+		print("E IMPLEMENTACIÓN DE ALGORITMOS DE ClUSTERING")
+		print("========================================================================\n")
+		print("SELECCIONE UN ALGOTIRMO:")
+		print("------------------------------------------------------------------------")
+		print("* Análisis de componentes principales (ACP) ....................1")
+		print("* Análisis de componentes principales por kernel (ACPK) ........2")
+		print("* KNN (K-Vecinos más Cercanos) .................................3")
+		print("* KMEANS (Método de agrupamiento) ..............................4")
+		print("* EM (Clúster probabilístico) ..................................5")
+		print("* SALIR ........................................................0")
+		print("------------------------------------------------------------------------")
+		opcion = input("Opción: ")
 
-	if (opcion != "1" and opcion != "2" and opcion != "3" and opcion != "4" and opcion != "5" and opcion != "0"):
-		print("La opción seleccionada no es valida")
+		if (opcion != "1" and opcion != "2" and opcion != "3" and opcion != "4" and opcion != "5" and opcion != "0"):
+			print("La opción seleccionada no es valida")
 
-	while (opcion < "0" or opcion > "5"):
-		opcion = input("Ingrese nuevamente la opcion: ")
+		while (opcion < "0" or opcion > "5"):
+			opcion = input("Ingrese nuevamente la opcion: ")
 
-	if (opcion == "1"):
-		ACP()
-	elif (opcion == "2"):
-		ACPK()
-	elif (opcion == "3"):
-		KNN()
-	elif (opcion == "4"):
-		KMEANS()
-	elif (opcion == "5"):
-		EM()
-	elif (opcion == "0"):
-		exit()
+		if (opcion == "1"):
+			ACP()
+		elif (opcion == "2"):
+			ACPK()
+		elif (opcion == "3"):
+			KNN()
+		elif (opcion == "4"):
+			KMEANS()
+		elif (opcion == "5"):
+			EM()
+		elif (opcion == "0"):
+			bucle = False
+			exit()
 
 menu()
