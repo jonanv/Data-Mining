@@ -648,12 +648,12 @@ def KNN():
 	kEjeY = kEjes.ix[:, 1]
 	
 	# Radio tomado de la mayor distancia de los vecinos más cercanos
-	radio = knnDistancia[k-1][1]
+	#radio = knnDistancia[k-1][1]
 
 	# Grafica de los datos normalizados
 	plt.plot(ejeX, ejeY, 'ro', marker='o', color='r', label="Valores", alpha=0.5) # Datos de la matriz normalizada en rojo
 	plt.plot(Cluster[listaGrafica[0]], Cluster[listaGrafica[1]], 'bo', marker='o', color='b', label="Valor nuevo") # Nuevo dato en azul
-	plt.plot(Cluster[listaGrafica[0]], Cluster[listaGrafica[1]], 'bo', marker='o', markersize=100*radio, linewidth=0.5, alpha=0.2) # Área del nuevo dato
+	plt.plot(Cluster[listaGrafica[0]], Cluster[listaGrafica[1]], 'bo', marker='o', markersize=100, linewidth=0.5, alpha=0.2) # Área del nuevo dato
 	plt.plot(kEjeX, kEjeY, 'go', marker='o', color='g', label="Vecinos cerca", alpha=0.5) # Datos de la matriz de vecinos más cercanos en verde
 	plt.xlabel(etiquetasGrafica[0]) # Etiqueda en el eje X
 	plt.ylabel(etiquetasGrafica[1]) # Etiqueta en el eje Y
