@@ -59,10 +59,10 @@ def dist_euclidiana(v1, v2):
 
 # Función de la distancia de manhattan
 def dist_manhattan(v1, v2):
-	tam1 = len(v1)
+	dimension = len(v1)
 	resutl = 0
 	rest = 0
-	for x in range(tam1):
+	for x in range(dimension):
 		rest += (float(v1[x]) - float(v2[x]))
 	result = abs(rest)
 	return result
