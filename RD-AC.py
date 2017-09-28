@@ -3,35 +3,22 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import math, operator, random, copy, os
 from numpy import linalg as la
-import easygui as eg
-'''
-from sklearn.preprocessing import StandardScaler
 
-from matplotlib.colors import ListedColormap
-from sklearn import neighbors, datasets
-from sklearn.decomposition import PCA, KernelPCA
-from sklearn.datasets import make_circles
-'''
 
-# Archivo dataset que se va a cargar
-#filename = 'dataset/dataset.csv'
-#filename = 'dataset/dataset_muestra.csv'
-#filename = 'dataset/Dataset_Educativo_Completo.csv'
-#filename = 'dataset/iris.data'
-#filename = 'dataset/prueba.data'
-#filename = 'dataset/kmeans.data'
-#filename = 'dataset/pca.data'
-#filename = 'dataset/kpca.data'
+
+# Carpeta de la lista de archivos
+carpeta = 'dataset/'
+
+# Lista de archivos de carpeta
+archivos = os.listdir(carpeta)
 
 # Función que selecciona el archivo
 def seleccionar():
-	extension = ["*.csv","*.data"]
-	archivo = eg.fileopenbox(msg="Abrir archivo",
-							title="Control: fileopenbox",
-							default='',
-							filetypes=extension)                   
-	eg.msgbox(archivo, "fileopenbox", ok_button="Continuar")
-	return archivo
+	print()
+	for x in range(len(archivos)):
+		print(str(x+1) + ". " + archivos[x])
+	nArchivo = int(input("Seleccionar un archivo de dataset: "))
+	return archivos[nArchivo-1]
 
 # Función que carga el archivo y pregunta si tiene encabezado
 def loadDataset():
@@ -43,7 +30,7 @@ def loadDataset():
 		header = None
 		print("El archivo debe de tener encabezado para determinar las caracteristicas y las clases")
 		exit()
-	dataset = pd.read_csv(seleccionar(), header=header)
+	dataset = pd.read_csv(carpeta + str(seleccionar()), header=header)
 	return dataset
 
 # Función que recibe que n individuo de la matriz normalizada va a devolver
@@ -62,6 +49,16 @@ def dist_euclidiana(v1, v2):
 		suma += math.pow(float(v1[i]) - float(v2[i]), 2)
 	return math.sqrt(suma)
 
+# Función de la distancia de manhattan
+def dist_manhattan(v1, v2):
+	tam1 = len(v1)
+	resutl = 0
+	rest = 0
+	for x in range(tam1):
+		rest += (float(v1[x]) - float(v2[x]))
+	result = abs(rest)
+	return result
+
 # Función que determina el numero menor de unal ista y devuelve su posición
 def minimo(lista):
 	dimension = len(lista)
@@ -72,9 +69,23 @@ def minimo(lista):
 			minimo = lista[x]
 			posicion = x
 	return posicion
+'''
+def seleccion_metrica():
+	mOpcion = str(input("\nSeleccione la metrica que quiere utilizar: "))
 
+	if (mOpcion != "1" and mOpcion != "2" and mOpcion != "0"):
+			print("La opción seleccionada no es valida")
 
+	while (mOpcion < "0" or mOpcion > "2"):
+		mOpcion = input("Ingrese nuevamente la opcion: ")
 
+	if (mOpcion == "1"):
+		print("Distancia euclidiana")
+	elif (mOpcion == "2"):
+		print("Distancia de manhattan")
+	elif (mOpcion == "0"):
+		exit()
+'''
 
 
 def ACP():
