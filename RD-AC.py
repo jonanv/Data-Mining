@@ -17,7 +17,10 @@ def seleccionar():
 	print()
 	for x in range(len(archivos)):
 		print(str(x+1) + ". " + archivos[x])
-	nArchivo = int(input("Seleccionar un archivo de dataset: "))
+	nArchivo = int(input("Ingrese el número del dataset que desea seleccionar: "))
+
+	while (nArchivo < 1 or nArchivo > len(archivos)):
+		nArchivo = int(input("El número es incorrecto, debe estar entre " + str(1) + " y " + str(len(archivos)) + ": "))
 	return archivos[nArchivo-1]
 
 # Función que carga el archivo y pregunta si tiene encabezado
@@ -259,11 +262,113 @@ def ACP():
 def ACPK():
 	print("Algoritmo de ACPK")
 
+	# Cargar el archivo dataset
+	dataset = loadDataset()
+	#print(dataset)
+	#print(dataset.head())
 
+	# Se extraen las columnas del dataset
+	dataset.columns
+	#print(dataset.columns)
 
+	print("Descripción del dataset: ")
+	print(dataset.describe()) # Descripción estadistica de los datos
+	columns = len(dataset.columns) # Número total de columnas
+	#print(columns)
+	rows = len(dataset.index) # Número total de filas
+	#print(rows)
 
+	# Agrupando columnas por tipo de datos
+	tipos = dataset.columns.to_series().groupby(dataset.dtypes).groups
 
+	# Armando lista de columnas categóricas
+	try:
+		ctext = tipos[np.dtype('object')]
+	except KeyError:
+		ctext = list() # lista de columnas vacia en caso de que no haya categóricas
+	print("\nNúmero de columnas categoricas: " + str(len(ctext))) # cantidad de columnas con datos categóricos
 
+	# Armando lista de columnas numéricas
+	columnas = dataset.columns  # lista total las columnas
+	cnum = list(set(columnas) - set(ctext)) # Total de columnas menos columnas no numéricas
+	print("Número de columnas numericas: " + str(len(cnum)))
+
+	# Lista de medias
+	#print(dataset.mean())
+	'''media = list()
+	for x in range(len(dataset.mean())):
+		media.append(dataset.mean()[x])
+	print(media)'''
+
+	media = dataset.mean().values.tolist() # Convertir la media del dataset a una lista
+	print("\nLista de medias: " + str(media))
+	#print(media)
+
+	# Lista de desviación estandar
+	#print(dataset.std())
+	'''destandar = list()
+	for x in range(len(dataset.std())):
+		destandar.append(dataset.std()[x])
+	print(destandar)'''
+
+	destandar = dataset.std().values.tolist() # Convertir la desviación estandar del dataset a una lista
+	print("Lista de desviación estandar: " + str(destandar))
+	#print(destandar)
+
+	# Lista de caracteristicas
+	lcaracteristicas = list()
+	for x in range(len(cnum)):
+		lcaracteristicas.append(columnas[x])
+	print("Lista de características: " + str(lcaracteristicas))
+	#print(lcaracteristicas)
+
+	# Todas las filas y todas las columnas del dataset en una lista
+	matriz = dataset.loc[:,].values
+	print("\nMatriz:")
+	print(matriz)
+
+	# ===========================================================================================================================
+	'''
+	# Matriz en una lista
+	matrizLista = matriz.tolist() # Convertir la matriz a una lista
+	#print(matrizLista)
+
+	# Transpuesta de la matriz de datos ajustados
+	Transpuesta = np.array(matrizLista) # Convertir la lista a formato numpy
+	matrizListaT = Transpuesta.transpose().tolist() # Convertir la lista numpy con la transpuesta a formato normal de lista
+	print("\nMatriz transpuesta:")
+	#print(matrizListaT)
+	MLT = pd.DataFrame(np.array(matrizListaT)) # Matriz de datos ajustados con pandas
+	print(MLT)
+
+	# Matriz de covarianza (Transpuesta X Matriz)
+	matrizCovarianza = list()
+	MCrow = list()
+	suma = 0
+	for i in range(len(matrizListaT)): # Filas de la matriz 1
+		for j in range(columns): # Columnas de la matriz 2
+			for k in range(rows): # Filas de la matriz 2
+				suma += (matrizListaT[i][k] * matrizLista[k][j])
+			covarianza = (suma / (rows-1)) # Cada valor de la matriz de covarianza se debe dividir por n-1 (filas-1)
+			MCrow.append(covarianza)
+			suma = 0
+		matrizCovarianza.append(MCrow)
+		MCrow = list()
+	print("\nMatriz de covarianza:")
+	#print(matrizCovarianza)
+	MC = pd.DataFrame(np.array(matrizCovarianza)) # Matriz de covarianza con pandas
+	print(MC)
+
+	# Valores propios y vectores propios
+	evalues, evectors = la.eig(np.array(matrizCovarianza))
+	print("\nValores propios:")
+	eigenvalues = evalues.tolist()
+	print(eigenvalues)
+	print("\nVectores propios:")
+	print(evectors)
+	eigenvectors = evectors.tolist()
+	#print(eigenvectors)
+	'''
 
 
 
@@ -433,8 +538,8 @@ def KNN():
 
 	# Número de vecinos cercanos
 	k = int(input("\nIngrese el número de K o vecinos cercanos: "))
-	while (k > rows):
-		k = int(input("El valor de K es incorrecto, debe ser menor o igual a " + str(rows) + ": "))
+	while (k < 1 or k > rows):
+		k = int(input("El valor de K es incorrecto, debe estar entre 1" + " y " + str(rows) + ": "))
 
 	# Valor seleccionado aleatoriamente para ser el Cluster
 	aleatorio = random.randint(0, rows-1)
@@ -682,8 +787,8 @@ def KMEANS():
 	
 	# Número de cluster
 	nCluster = int(input("\nIngrese el número de N Clusters: "))
-	while (nCluster > rows):
-		nCluster = int(input("El valor de N es incorrecto, debe ser menor o igual a " + str(rows) + ": "))
+	while (nCluster < 1 or nCluster > rows):
+		nCluster = int(input("El valor de N es incorrecto, debe estar entre 1" + " y " + str(rows) + ": "))
 	
 	# Selección de los centroides de los Clusters aleatorios y sus indices hasta completar el número de Clusters
 	ClustersCentroides = list()
@@ -926,15 +1031,14 @@ def menu():
 		print("* Análisis de componentes principales por kernel (ACPK) ........2")
 		print("* KNN (K-Vecinos más Cercanos) .................................3")
 		print("* KMEANS (Método de agrupamiento) ..............................4")
-		print("* EM (Clúster probabilístico) ..................................5")
 		print("* SALIR ........................................................0")
 		print("------------------------------------------------------------------------")
 		opcion = input("Opción: ")
 
-		if (opcion != "1" and opcion != "2" and opcion != "3" and opcion != "4" and opcion != "5" and opcion != "0"):
+		if (opcion != "1" and opcion != "2" and opcion != "3" and opcion != "4" and opcion != "0"):
 			print("La opción seleccionada no es valida")
 
-		while (opcion < "0" or opcion > "5"):
+		while (opcion < "0" or opcion > "4"):
 			opcion = input("Ingrese nuevamente la opcion: ")
 
 		if (opcion == "1"):
@@ -945,8 +1049,6 @@ def menu():
 			KNN()
 		elif (opcion == "4"):
 			KMEANS()
-		elif (opcion == "5"):
-			EM()
 		elif (opcion == "0"):
 			bucle = False
 			exit()
