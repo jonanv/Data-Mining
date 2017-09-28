@@ -19,8 +19,8 @@ from sklearn.datasets import make_circles
 #filename = 'dataset/iris.data'
 #filename = 'dataset/prueba.data'
 #filename = 'dataset/kmeans.data'
-#filename = 'dataset/pca.data'
-filename = 'dataset/kpca.data'
+filename = 'dataset/pca.data'
+#filename = 'dataset/kpca.data'
 
 # Función que carga el archivo y pregunta si tiene encabezado
 def loadDataset():
@@ -228,25 +228,41 @@ def ACP():
 	NCD = pd.DataFrame(np.array(nuevoConjuntoDatos)) # Matriz de nuevo conjunto de datos con pandas
 	print(NCD)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
-
+	# Guardar componentes en un archivo csv
+	print("\nSe ha generado un archivo .csv con los componentes")
+	NCD.columns = lcaracteristicas
+	NCD.to_csv('dataset/pca_componentes.csv', header=True, sep=',', index=False)
 
 def ACPK():
 	print("Algoritmo de ACPK")
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	
 
