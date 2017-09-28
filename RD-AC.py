@@ -6,15 +6,20 @@ from numpy import linalg as la
 
 
 
-# Carpeta de la lista de archivos
-carpeta = 'dataset/'
+# Función que retorna la variable con el nombre de la carpeta de dataset
+def folder():
+	carpeta = 'dataset/'
+	return carpeta
 
-# Lista de archivos de carpeta
-archivos = os.listdir(carpeta)
+# Función que retorna una lista con los archivos del dataset
+def files(carpeta):
+	archivos = os.listdir(carpeta)
+	return archivos
 
 # Función que selecciona el archivo
 def seleccionar():
 	print()
+	archivos = files(folder())
 	for x in range(len(archivos)):
 		print(str(x+1) + ". " + archivos[x])
 	nArchivo = int(input("Ingrese el número del dataset que desea seleccionar: "))
@@ -25,7 +30,7 @@ def seleccionar():
 
 # Función que carga el archivo y pregunta si tiene encabezado
 def loadDataset():
-	header = input("El archivo tiene encabezado? y/n: ")
+	header = input("\nEl archivo tiene encabezado? y/n: ")
 	header = header.lower()
 	if header == 'y' or header == 'yes' or header == 's' or  header == 'si':
 		header = 0
@@ -33,7 +38,7 @@ def loadDataset():
 		header = None
 		print("El archivo debe de tener encabezado para determinar las caracteristicas y las clases")
 		exit()
-	dataset = pd.read_csv(carpeta + str(seleccionar()), header=header)
+	dataset = pd.read_csv(str(folder()) + str(seleccionar()), header=header)
 	return dataset
 
 # Función que recibe que n individuo de la matriz normalizada va a devolver
@@ -72,23 +77,34 @@ def minimo(lista):
 			minimo = lista[x]
 			posicion = x
 	return posicion
-'''
+
+# Lista de metricas de distancia
+lista_metricas = ['Distancia euclidiana', 'Distancia de manhattan']
+
+# Función que selecciona la metrica que se quiere
 def seleccion_metrica():
-	mOpcion = str(input("\nSeleccione la metrica que quiere utilizar: "))
+	print()
+	
+	for x in range(len(lista_metricas)):
+		print(str(x+1) + ". " + str(lista_metricas[x]))
+	mOpcion = int(input("Seleccione la metrica que quiere utilizar: "))
 
-	if (mOpcion != "1" and mOpcion != "2" and mOpcion != "0"):
-			print("La opción seleccionada no es valida")
+	while (mOpcion < 1 or mOpcion > len(lista_metricas)):
+		mOpcion = int(input("El número es incorrecto, debe estar entre " + str(1) + " y " + str(len(lista_metricas)) + ": "))
+	return mOpcion
 
-	while (mOpcion < "0" or mOpcion > "2"):
-		mOpcion = input("Ingrese nuevamente la opcion: ")
+# Función que escoge la metrica que se quiere
+def seleccion_metrica_distancia(v1, v2, mOpcion):
+	if (mOpcion == 1):
+		resultado = dist_euclidiana(v1, v2) # Distancia euclidiana
+	elif (mOpcion == 2):
+		resultado = dist_manhattan(v1, v2) # Distancia de manhattan
+	return resultado
 
-	if (mOpcion == "1"):
-		print("Distancia euclidiana")
-	elif (mOpcion == "2"):
-		print("Distancia de manhattan")
-	elif (mOpcion == "0"):
-		exit()
-'''
+
+# ALGORITMOS DE ANÁLISIS DE COMPONENTES Y CLUSTERING
+# =======================================================================================================================
+# =======================================================================================================================
 
 
 def ACP():
@@ -397,6 +413,9 @@ def ACPK():
 def KNN():
 	print("Algoritmo de KNN")
 
+	# Se establece la selección de la metrica que se quiere
+	opcionMetrica = seleccion_metrica()
+
 	# Cargar el archivo dataset
 	dataset = loadDataset()
 	#print(dataset)
@@ -488,14 +507,14 @@ def KNN():
 				valor = matrizNormalizada[v][h]
 				individuo_tabla.append(valor)
 			#print(individuo_tabla)
-			metrica = dist_euclidiana(individuo, individuo_tabla)
+			metrica = seleccion_metrica_distancia(individuo, individuo_tabla, opcionMetrica)
 			#print(metrica)
 			lista_metrica.append(metrica)
 			individuo_tabla = list()
 		#print(lista_metrica)
 		matriz_distancia.append(lista_metrica)
 		lista_metrica = list()
-	print("\nMatriz de distancia euclidiana:")
+	print("\nMatriz de " + str(lista_metricas[opcionMetrica-1]) + ": ")
 	#print(matriz_distancia)
 	MD = pd.DataFrame(np.array(matriz_distancia)) # Matriz de distacia con pandas
 	print(MD)
@@ -554,7 +573,7 @@ def KNN():
 		for y in range(len(Cluster)):
 			valor = matriz_distancia[x][y]
 			individuo_tabla_distancia.append(valor)
-		distancia = dist_euclidiana(Cluster, individuo_tabla_distancia)
+		distancia = seleccion_metrica_distancia(Cluster, individuo_tabla_distancia, opcionMetrica)
 		valorDistancias.append(distancia)
 		individuo_tabla_distancia = list()
 	print("\nDistancias al punto del Cluster:")
@@ -646,6 +665,9 @@ def KNN():
 def KMEANS():
 	print("Algoritmo de KMEANS")
 
+	# Se establece la selección de la metrica que se quiere
+	opcionMetrica = seleccion_metrica()
+
 	# Cargar el archivo dataset
 	dataset = loadDataset()
 	#print(dataset)
@@ -736,14 +758,14 @@ def KMEANS():
 				valor = matrizNormalizada[v][h]
 				individuo_tabla.append(valor)
 			#print(individuo_tabla)
-			metrica = dist_euclidiana(individuo, individuo_tabla)
+			metrica = seleccion_metrica_distancia(individuo, individuo_tabla, opcionMetrica)
 			#print(metrica)
 			lista_metrica.append(metrica)
 			individuo_tabla = list()
 		#print(lista_metrica)
 		matriz_distancia.append(lista_metrica)
 		lista_metrica = list()
-	print("\nMatriz de distancia euclidiana:")
+	print("\nMatriz de " + str(lista_metricas[opcionMetrica-1]) + ": ")
 	#print(matriz_distancia)
 	MD = pd.DataFrame(np.array(matriz_distancia)) # Matriz de distacia con pandas
 	print(MD)
@@ -902,14 +924,14 @@ def KMEANS():
 					valor = matrizNormalizada[v][h]
 					individuo_tabla.append(valor)
 				#print(individuo_tabla)
-				metrica = dist_euclidiana(mediaClustersNuevosCentroides[n], individuo_tabla)
+				metrica = seleccion_metrica_distancia(mediaClustersNuevosCentroides[n], individuo_tabla, opcionMetrica)
 				#print(metrica)
 				lista_metrica.append(metrica)
 				individuo_tabla = list()
 			#print(lista_metrica)
 			matriz_distancia_cluster.append(lista_metrica)
 			lista_metrica = list()
-		print("\nMatriz de distancia euclidiana de los Cluster nuevos:")
+		print("\nMatriz de " + str(lista_metricas[opcionMetrica-1]) + " de los Cluster nuevos:")
 		#print(matriz_distancia_cluster)
 		MDC = pd.DataFrame(np.array(matriz_distancia_cluster)) # Matriz de distacia con pandas
 		print(MDC)
