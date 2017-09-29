@@ -344,17 +344,17 @@ def ACPK():
 	print(matriz)
 
 	# ===========================================================================================================================
-	'''
+	
 	# Matriz en una lista
 	matrizLista = matriz.tolist() # Convertir la matriz a una lista
 	#print(matrizLista)
 
-	# Transpuesta de la matriz de datos ajustados
+	# Transpuesta de la matriz de datos
 	Transpuesta = np.array(matrizLista) # Convertir la lista a formato numpy
 	matrizListaT = Transpuesta.transpose().tolist() # Convertir la lista numpy con la transpuesta a formato normal de lista
 	print("\nMatriz transpuesta:")
 	#print(matrizListaT)
-	MLT = pd.DataFrame(np.array(matrizListaT)) # Matriz de datos ajustados con pandas
+	MLT = pd.DataFrame(np.array(matrizListaT)) # Matriz de datos con pandas
 	print(MLT)
 
 	# Matriz de covarianza (Transpuesta X Matriz)
@@ -384,10 +384,29 @@ def ACPK():
 	print(evectors)
 	eigenvectors = evectors.tolist()
 	#print(eigenvectors)
-	'''
+	
+	# Suma de los valores propios
+	sumaEigenvalues = 0
+	for x in range(len(eigenvalues)):
+		sumaEigenvalues += eigenvalues[x]
+	print("\nSuma de los valores propios: " + str(sumaEigenvalues))
 
-
-
+	# Multiplicación de la matriz de datos por la matriz de vectores propios (Matriz de datos X Vectores propios)
+	matrizNueva = list()
+	MNrow = list()
+	suma = 0
+	for i in range(len(matrizLista)): # Filas de la matriz 1
+		for j in range(len(eigenvectors)): # Columnas de la matriz 2
+			for k in range(len(eigenvectors)): # Filas de la matriz 2
+				suma += (matrizLista[i][k] * eigenvectors[k][j])
+			MNrow.append(suma)
+			suma = 0
+		matrizNueva.append(MNrow)
+		MNrow = list()
+	print("\nMatriz de nueva:")
+	#print(matrizNueva)
+	MN = pd.DataFrame(np.array(matrizNueva)) # Matriz de nueva con pandas
+	print(MN)
 
 
 
@@ -663,7 +682,7 @@ def KNN():
 	plt.show()
 
 def KMEANS():
-	print("Algoritmo de KMEANS")
+	print("Algoritmo de K-MEANS")
 
 	# Se establece la selección de la metrica que se quiere
 	opcionMetrica = seleccion_metrica()
@@ -1032,13 +1051,9 @@ def KMEANS():
 	plt.xlabel(etiquetasGrafica[0]) # Etiqueda en el eje X
 	plt.ylabel(etiquetasGrafica[1]) # Etiqueta en el eje Y
 	plt.grid(color='b', alpha=0.2, linestyle='dashed', linewidth=0.5) # Malla o grilla
-	plt.title('KMEANS, N Clusters = ' + str(nCluster) + ', Iteraciones = ' + str(iteraciones)) # Titulo de la gráfica
+	plt.title('K-MEANS, N Clusters = ' + str(nCluster) + ', Iteraciones = ' + str(iteraciones)) # Titulo de la gráfica
 	plt.legend(loc="lower right") # Legenda de la gráfica
 	plt.show()
-	
-def EM():
-	print("Algoritmo de EM")
-
 
 def menu():
 	bucle = True
@@ -1052,7 +1067,7 @@ def menu():
 		print("* Análisis de componentes principales (ACP) ....................1")
 		print("* Análisis de componentes principales por kernel (ACPK) ........2")
 		print("* KNN (K-Vecinos más Cercanos) .................................3")
-		print("* KMEANS (Método de agrupamiento) ..............................4")
+		print("* K-MEANS (Método de agrupamiento) ..............................4")
 		print("* SALIR ........................................................0")
 		print("------------------------------------------------------------------------")
 		opcion = input("Opción: ")
