@@ -1,3 +1,8 @@
+"""
+Desarrollado por Johanny Vargas González
+28/08/2017
+"""
+
 import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -348,6 +353,20 @@ def ACPK():
 	# Matriz en una lista
 	matrizLista = matriz.tolist() # Convertir la matriz a una lista
 	#print(matrizLista)
+
+	# Datos de la matriz
+	matrizDatos = list()
+	MDArow = list()
+	for x in range(rows):
+		for y in range(len(cnum)):
+			result = (matriz[x][y] - media[y])
+			MDArow.append(result)
+		matrizDatosAjustados.append(MDArow)
+		MDArow = list()
+	print("\nMatriz de datos ajustados:")
+	#print(matrizDatosAjustados)
+	MDA = pd.DataFrame(np.array(matrizDatosAjustados)) # Matriz de datos ajustados con pandas
+	print(MDA)
 
 	# Transpuesta de la matriz de datos
 	Transpuesta = np.array(matrizLista) # Convertir la lista a formato numpy
