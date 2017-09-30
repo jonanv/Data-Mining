@@ -263,7 +263,7 @@ def ACP():
 	dp.reverse() # ordena descendente con .reverse()
 	print(dp) # Imprime el diccionario en tuplas ordenado por valor
 
-	# Nuevo conjunto de datos (Datos ajustados con la media X Matriz de valores propios)
+	# Nuevo conjunto de datos (Datos ajustados con la media X Matriz de vectores propios)
 	nuevoConjuntoDatos = list()
 	NCDrow = list()
 	suma = 0
@@ -1076,11 +1076,11 @@ def menu():
 		print("========================================================================\n")
 		print("SELECCIONE UN ALGOTIRMO:")
 		print("------------------------------------------------------------------------")
-		print("* Análisis de componentes principales (ACP) ....................1")
-		print("* Análisis de componentes principales por kernel (ACPK) ........2")
-		print("* KNN (K-Vecinos más Cercanos) .................................3")
-		print("* K-MEANS (Método de agrupamiento) .............................4")
-		print("* SALIR ........................................................0")
+		print("* Análisis de componentes principales (ACP o PCA) .................1")
+		print("* Análisis de componentes principales por kernel (ACPK o KPCA) ....2")
+		print("* KNN (K-Vecinos más Cercanos) ....................................3")
+		print("* K-MEANS (Método de agrupamiento) ................................4")
+		print("* SALIR ...........................................................0")
 		print("------------------------------------------------------------------------")
 		opcion = input("Opción: ")
 
