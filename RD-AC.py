@@ -181,7 +181,7 @@ def ACP():
 	matrizDatosAjustados = list()
 	MDArow = list()
 	for x in range(rows):
-		for y in range(columns):
+		for y in range(len(cnum)):
 			result = (matriz[x][y] - media[y])
 			MDArow.append(result)
 		matrizDatosAjustados.append(MDArow)
@@ -204,7 +204,7 @@ def ACP():
 	MCrow = list()
 	suma = 0
 	for i in range(len(matrizDatosAjustadosT)): # Filas de la matriz 1
-		for j in range(columns): # Columnas de la matriz 2
+		for j in range(len(cnum)): # Columnas de la matriz 2
 			for k in range(rows): # Filas de la matriz 2
 				suma += (matrizDatosAjustadosT[i][k] * matrizDatosAjustados[k][j])
 			covarianza = (suma / (rows-1)) # Cada valor de la matriz de covarianza se debe dividir por n-1 (filas-1)
@@ -362,7 +362,7 @@ def ACPK():
 	MCrow = list()
 	suma = 0
 	for i in range(len(matrizListaT)): # Filas de la matriz 1
-		for j in range(columns): # Columnas de la matriz 2
+		for j in range(len(cnum)): # Columnas de la matriz 2
 			for k in range(rows): # Filas de la matriz 2
 				suma += (matrizListaT[i][k] * matrizLista[k][j])
 			covarianza = (suma / (rows-1)) # Cada valor de la matriz de covarianza se debe dividir por n-1 (filas-1)
@@ -504,7 +504,7 @@ def KNN():
 	matrizNormalizada = list()
 	MNrow = list()
 	for x in range(rows):
-		for y in range(columns):
+		for y in range(len(cnum)):
 			result = ((matriz[x][y] - media[y]) / destandar[y])
 			MNrow.append(result)
 		matrizNormalizada.append(MNrow)
@@ -519,10 +519,10 @@ def KNN():
 	lista_metrica = list()
 	matriz_distancia = list()
 	for n in range(rows):
-		individuo = vector_registro_matrizNormalizada(n, matrizNormalizada, columns)
+		individuo = vector_registro_matrizNormalizada(n, matrizNormalizada, len(cnum))
 		#print(individuo)
 		for v in range(rows):
-			for h in range(columns):
+			for h in range(len(cnum)):
 				valor = matrizNormalizada[v][h]
 				individuo_tabla.append(valor)
 			#print(individuo_tabla)
@@ -582,19 +582,9 @@ def KNN():
 	# Valor seleccionado aleatoriamente para ser el Cluster
 	aleatorio = random.randint(0, rows-1)
 	print("Valor seleccionado aleatoriamente: " + str(aleatorio))
-	Cluster = matriz_distancia[aleatorio]
-	print(Cluster)
-	
+
 	# Lista de distancias con respecto al Cluster seleccionado
-	valorDistancias = list()
-	individuo_tabla_distancia = list()
-	for x in range(len(matriz_distancia)):
-		for y in range(len(Cluster)):
-			valor = matriz_distancia[x][y]
-			individuo_tabla_distancia.append(valor)
-		distancia = seleccion_metrica_distancia(Cluster, individuo_tabla_distancia, opcionMetrica)
-		valorDistancias.append(distancia)
-		individuo_tabla_distancia = list()
+	valorDistancias = matriz_distancia[aleatorio]
 	print("\nDistancias al punto del Cluster:")
 	print(valorDistancias)
 
@@ -671,8 +661,8 @@ def KNN():
 
 	# Grafica de los datos normalizados
 	plt.plot(ejeX, ejeY, 'ro', marker='o', color='r', label="Valores", alpha=0.5) # Datos de la matriz normalizada en rojo
-	plt.plot(Cluster[listaGrafica[0]], Cluster[listaGrafica[1]], 'bo', marker='o', color='b', label="Valor nuevo") # Nuevo dato en azul
-	plt.plot(Cluster[listaGrafica[0]], Cluster[listaGrafica[1]], 'bo', marker='o', markersize=100, linewidth=0.5, alpha=0.2) # Área del nuevo dato
+	plt.plot(knnDatos[0][listaGrafica[0]], knnDatos[0][listaGrafica[1]], 'bo', marker='o', color='b', label="Valor nuevo") # Nuevo dato en azul
+	plt.plot(knnDatos[0][listaGrafica[0]], knnDatos[0][listaGrafica[1]], 'bo', marker='o', markersize=100, linewidth=0.5, alpha=0.2) # Área del nuevo dato
 	plt.plot(kEjeX, kEjeY, 'go', marker='o', color='g', label="Vecinos cerca", alpha=0.5) # Datos de la matriz de vecinos más cercanos en verde
 	plt.xlabel(etiquetasGrafica[0]) # Etiqueda en el eje X
 	plt.ylabel(etiquetasGrafica[1]) # Etiqueta en el eje Y
@@ -755,7 +745,7 @@ def KMEANS():
 	matrizNormalizada = list()
 	MNrow = list()
 	for x in range(rows):
-		for y in range(columns):
+		for y in range(len(cnum)):
 			result = ((matriz[x][y] - media[y]) / destandar[y])
 			MNrow.append(result)
 		matrizNormalizada.append(MNrow)
@@ -770,10 +760,10 @@ def KMEANS():
 	lista_metrica = list()
 	matriz_distancia = list()
 	for n in range(rows):
-		individuo = vector_registro_matrizNormalizada(n, matrizNormalizada, columns)
+		individuo = vector_registro_matrizNormalizada(n, matrizNormalizada, len(cnum))
 		#print(individuo)
 		for v in range(rows):
-			for h in range(columns):
+			for h in range(len(cnum)):
 				valor = matrizNormalizada[v][h]
 				individuo_tabla.append(valor)
 			#print(individuo_tabla)
@@ -939,7 +929,7 @@ def KMEANS():
 		for n in range(nCluster):
 			
 			for v in range(rows):
-				for h in range(columns):
+				for h in range(len(cnum)):
 					valor = matrizNormalizada[v][h]
 					individuo_tabla.append(valor)
 				#print(individuo_tabla)
@@ -1067,7 +1057,7 @@ def menu():
 		print("* Análisis de componentes principales (ACP) ....................1")
 		print("* Análisis de componentes principales por kernel (ACPK) ........2")
 		print("* KNN (K-Vecinos más Cercanos) .................................3")
-		print("* K-MEANS (Método de agrupamiento) ..............................4")
+		print("* K-MEANS (Método de agrupamiento) .............................4")
 		print("* SALIR ........................................................0")
 		print("------------------------------------------------------------------------")
 		opcion = input("Opción: ")
