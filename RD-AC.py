@@ -107,9 +107,15 @@ def seleccion_metrica_distancia(v1, v2, mOpcion):
 	return resultado
 
 
+
+
+
 # ALGORITMOS DE ANÁLISIS DE COMPONENTES Y CLUSTERING
 # =======================================================================================================================
 # =======================================================================================================================
+
+
+
 
 
 def ACP():
@@ -277,8 +283,12 @@ def ACP():
 	# Guardar componentes en un archivo csv
 	NCD.columns = lcaracteristicas
 	name = str(input("\nIngrese el nombre de su archivo .csv: "))
-	NCD.to_csv('dataset/' + str(name) + '.csv', header=True, sep=',', index=False)
+	NCD.to_csv(str(folder()) + str(name) + '.csv', header=True, sep=',', index=False)
 	print("\nSe ha generado un archivo " + str(name) + ".csv con los componentes")
+
+
+
+
 
 def ACPK():
 	print("Algoritmo de ACPK")
@@ -350,40 +360,36 @@ def ACPK():
 
 	# ===========================================================================================================================
 	
-	# Matriz en una lista
-	matrizLista = matriz.tolist() # Convertir la matriz a una lista
-	#print(matrizLista)
-
 	# Datos de la matriz
 	matrizDatos = list()
-	MDArow = list()
+	MDrow = list()
 	for x in range(rows):
 		for y in range(len(cnum)):
-			result = (matriz[x][y] - media[y])
-			MDArow.append(result)
-		matrizDatosAjustados.append(MDArow)
-		MDArow = list()
-	print("\nMatriz de datos ajustados:")
-	#print(matrizDatosAjustados)
-	MDA = pd.DataFrame(np.array(matrizDatosAjustados)) # Matriz de datos ajustados con pandas
-	print(MDA)
+			result = (matriz[x][y])
+			MDrow.append(result)
+		matrizDatos.append(MDrow)
+		MDrow = list()
+	print("\nMatriz de datos:")
+	#print(matrizDatos)
+	MD = pd.DataFrame(np.array(matrizDatos)) # Matriz de datos con pandas
+	print(MD)
 
 	# Transpuesta de la matriz de datos
-	Transpuesta = np.array(matrizLista) # Convertir la lista a formato numpy
-	matrizListaT = Transpuesta.transpose().tolist() # Convertir la lista numpy con la transpuesta a formato normal de lista
+	Transpuesta = np.array(matrizDatos) # Convertir la lista a formato numpy
+	matrizDatosT = Transpuesta.transpose().tolist() # Convertir la lista numpy con la transpuesta a formato normal de lista
 	print("\nMatriz transpuesta:")
-	#print(matrizListaT)
-	MLT = pd.DataFrame(np.array(matrizListaT)) # Matriz de datos con pandas
-	print(MLT)
+	#print(matrizDatosT)
+	MDT = pd.DataFrame(np.array(matrizDatosT)) # Matriz de datos con pandas
+	print(MDT)
 
 	# Matriz de covarianza (Transpuesta X Matriz)
 	matrizCovarianza = list()
 	MCrow = list()
 	suma = 0
-	for i in range(len(matrizListaT)): # Filas de la matriz 1
+	for i in range(len(matrizDatosT)): # Filas de la matriz 1
 		for j in range(len(cnum)): # Columnas de la matriz 2
 			for k in range(rows): # Filas de la matriz 2
-				suma += (matrizListaT[i][k] * matrizLista[k][j])
+				suma += (matrizDatosT[i][k] * matrizDatos[k][j])
 			covarianza = (suma / (rows-1)) # Cada valor de la matriz de covarianza se debe dividir por n-1 (filas-1)
 			MCrow.append(covarianza)
 			suma = 0
@@ -414,10 +420,10 @@ def ACPK():
 	matrizNueva = list()
 	MNrow = list()
 	suma = 0
-	for i in range(len(matrizLista)): # Filas de la matriz 1
+	for i in range(len(matrizDatos)): # Filas de la matriz 1
 		for j in range(len(eigenvectors)): # Columnas de la matriz 2
 			for k in range(len(eigenvectors)): # Filas de la matriz 2
-				suma += (matrizLista[i][k] * eigenvectors[k][j])
+				suma += (matrizDatos[i][k] * eigenvectors[k][j])
 			MNrow.append(suma)
 			suma = 0
 		matrizNueva.append(MNrow)
@@ -427,26 +433,15 @@ def ACPK():
 	MN = pd.DataFrame(np.array(matrizNueva)) # Matriz de nueva con pandas
 	print(MN)
 
+	# Guardar componentes en un archivo csv
+	MN.columns = lcaracteristicas
+	name = str(input("\nIngrese el nombre de su archivo .csv: "))
+	MN.to_csv(str(folder()) + str(name) + '.csv', header=True, sep=',', index=False)
+	print("\nSe ha generado un archivo " + str(name) + ".csv con los componentes")
 
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	
 
 def KNN():
 	print("Algoritmo de KNN")
@@ -689,6 +684,10 @@ def KNN():
 	plt.title('KNN, k = ' + str(k)) # Titulo de la gráfica
 	plt.legend(loc="lower right") # Legenda de la gráfica
 	plt.show()
+
+
+
+
 
 def KMEANS():
 	print("Algoritmo de K-MEANS")
@@ -1063,6 +1062,10 @@ def KMEANS():
 	plt.title('K-MEANS, N Clusters = ' + str(nCluster) + ', Iteraciones = ' + str(iteraciones)) # Titulo de la gráfica
 	plt.legend(loc="lower right") # Legenda de la gráfica
 	plt.show()
+
+
+
+
 
 def menu():
 	bucle = True
